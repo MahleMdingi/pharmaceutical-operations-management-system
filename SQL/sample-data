@@ -1,0 +1,66 @@
+INSERT INTO Categories (CategoryName)
+VALUES
+('Antibiotics'),
+('Painkillers'),
+('Vaccines');
+
+INSERT INTO Products
+(ProductName, CategoryID, Dosage, UnitPrice)
+VALUES
+('Paracetamol', 2, '500mg', 25.99),
+('Amoxicillin', 1, '250mg', 89.50),
+('Flu Vaccine', 3, '10ml', 150.00);
+
+INSERT INTO Suppliers
+(SupplierName, ContactPerson, Phone, Region)
+VALUES
+('MediSupply Ltd', 'John Smith', '0215551234', 'Western Cape'),
+('PharmaSource', 'Sarah Jones', '0117778888', 'Gauteng');
+
+INSERT INTO SupplierProducts
+(SupplierID, ProductID, SupplyPrice, LeadTimeDays)
+VALUES
+(1, 1, 18.00, 5),
+(1, 2, 70.00, 7),
+(2, 3, 120.00, 10);
+
+INSERT INTO Warehouses
+(WarehouseName, Region)
+VALUES
+('Cape Town Central Warehouse', 'Western Cape'),
+('Johannesburg Storage Hub', 'Gauteng');
+
+INSERT INTO Batches
+(ProductID, BatchNumber, ManufactureDate, ExpiryDate, QuantityProduced)
+VALUES
+(1, 'PARA2026001', '2026-01-01', '2028-01-01', 10000),
+(2, 'AMOX2026001', '2026-02-01', '2027-02-01', 5000);
+
+INSERT INTO Inventory
+(BatchID, WarehouseID, QuantityAvailable)
+VALUES
+(1, 1, 8000),
+(2, 2, 4000);
+
+INSERT INTO Customers
+(CustomerName, CustomerType, Region)
+VALUES
+('CityCare Pharmacy', 'Pharmacy', 'Western Cape'),
+('MediHealth Hospital', 'Hospital', 'Gauteng');
+
+INSERT INTO Orders
+(CustomerID, OrderStatus, TotalAmount)
+VALUES
+(1, 'Pending', 2599.00),
+(2, 'Shipped', 5000.00);
+
+INSERT INTO OrderItems
+(OrderID, ProductID, Quantity, UnitPrice)
+VALUES
+(1, 1, 100, 25.99),
+(2, 2, 50, 89.50);
+
+INSERT INTO Shipments
+(OrderID, ShipmentDate, DeliveryDate, ShipmentStatus)
+VALUES
+(2, '2026-05-01', '2026-05-03', 'Delivered');
