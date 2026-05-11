@@ -1,0 +1,139 @@
+Create The Database
+CREATE DATABASE PharmaceuticalOperationsDB;
+GO
+
+USE PharmaceuticalOperationsDB;
+GO
+
+
+
+CREATE TABLE Categories (
+    CategoryID INT PRIMARY KEY IDENTITY(1,1),
+    CategoryName VARCHAR(100) NOT NULL UNIQUE
+);
+
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY IDENTITY(1,1),
+    ProductName VARCHAR(100) NOT NULL,
+    CategoryID INT NOT NULL,
+    Dosage VARCHAR(20) NOT NULL,
+    UnitPrice DECIMAL(10,2) NOT NULL,
+    
+    FOREIGN KEY (CategoryID)
+        REFERENCES Categories(CategoryID)
+);
+
+
+CREATE TABLE Suppliers (
+    SupplierID INT PRIMARY KEY IDENTITY(1,1),
+    SupplierName VARCHAR(100) NOT NULL,
+    ContactPerson VARCHAR(100),
+    Phone VARCHAR(20),
+    Region VARCHAR(50)
+);
+
+
+
+CREATE TABLE SupplierProducts (
+    SupplierProductID INT PRIMARY KEY IDENTITY(1,1),
+    SupplierID INT NOT NULL,
+    ProductID INT NOT NULL,
+    SupplyPrice DECIMAL(10,2) NOT NULL,
+    LeadTimeDays INT,
+
+    FOREIGN KEY (SupplierID)
+        REFERENCES Suppliers(SupplierID),
+
+    FOREIGN KEY (ProductID)
+        REFERENCES Products(ProductID)
+);
+
+
+
+CREATE TABLE Warehouses (
+    WarehouseID INT PRIMARY KEY IDENTITY(1,1),
+    WarehouseName VARCHAR(100) NOT NULL,
+    Region VARCHAR(50)
+);
+
+
+CREATE TABLE Batches (
+    BatchID INT PRIMARY KEY IDENTITY(1,1),
+    ProductID INT NOT NULL,
+    BatchNumber VARCHAR(50) NOT NULL UNIQUE,
+    ManufactureDate DATE NOT NULL,
+    ExpiryDate DATE NOT NULL,
+    QuantityProduced INT NOT NULL,
+
+    FOREIGN KEY (ProductID)
+        REFERENCES Products(ProductID),
+
+    CHECK (ExpiryDate > ManufactureDate),
+
+    CHECK (QuantityProduced >= 0)
+);
+
+
+CREATE TABLE Inventory (
+    InventoryID INT PRIMARY KEY IDENTITY(1,1),
+    BatchID INT NOT NULL,
+    WarehouseID INT NOT NULL,
+    QuantityAvailable INT NOT NULL,
+
+    FOREIGN KEY (BatchID)
+        REFERENCES Batches(BatchID),
+
+    FOREIGN KEY (WarehouseID)
+        REFERENCES Warehouses(WarehouseID),
+
+    CHECK (QuantityAvailable >= 0)
+);
+
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY IDENTITY(1,1),
+    CustomerName VARCHAR(100) NOT NULL,
+    CustomerType VARCHAR(50) NOT NULL,
+    Region VARCHAR(50)
+);
+
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY IDENTITY(1,1),
+    CustomerID INT NOT NULL,
+    OrderDate DATE NOT NULL DEFAULT GETDATE(),
+    OrderStatus VARCHAR(50) NOT NULL,
+    TotalAmount DECIMAL(10,2),
+
+    FOREIGN KEY (CustomerID)
+        REFERENCES Customers(CustomerID)
+);
+
+
+CREATE TABLE OrderItems (
+    OrderItemID INT PRIMARY KEY IDENTITY(1,1),
+    OrderID INT NOT NULL,
+    ProductID INT NOT NULL,
+    Quantity INT NOT NULL,
+    UnitPrice DECIMAL(10,2) NOT NULL,
+
+    FOREIGN KEY (OrderID)
+        REFERENCES Orders(OrderID),
+
+    FOREIGN KEY (ProductID)
+        REFERENCES Products(ProductID),
+
+    CHECK (Quantity > 0)
+);
+
+CREATE TABLE Shipments (
+    ShipmentID INT PRIMARY KEY IDENTITY(1,1),
+    OrderID INT NOT NULL,
+    ShipmentDate DATE,
+    DeliveryDate DATE,
+    ShipmentStatus VARCHAR(50),
+
+    FOREIGN KEY (OrderID)
+        REFERENCES Orders(OrderID)
+);
