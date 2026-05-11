@@ -46,3 +46,19 @@ This project aims to design a relational database capable of supporting those op
 - Expiry monitoring
 - Reporting queries
 - Performance optimization
+
+## Current Progress
+
+Completed:
+- Business requirements analysis
+- ERD design
+- Relationship mapping
+- Physical table creation
+- Primary & Foreign Key implementation
+- Sample data population
+
+Next Steps:
+- Stored procedures
+- Inventory business rules
+- Reporting queries
+- Performance optimization
