@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a SQL Server database design and backend development project that simulates a real-world pharmaceutical operations management system.
+This project is a SQL Server database design, backend development, and reporting project that simulates a real-world pharmaceutical operations management system.
 
 The goal of the system is to support:
 
@@ -13,6 +13,7 @@ The goal of the system is to support:
 * Customer order processing
 * Shipment tracking
 * Backend operational workflows
+* Reporting & analytics
 
 ---
 
@@ -42,7 +43,9 @@ This project aims to design and implement a relational database system capable o
 * Shipment tracking
 * Backend stored procedures
 * Inventory reduction logic
+* Inventory receival workflows
 * Transaction handling
+* Reporting & analytics queries
 
 ---
 
@@ -52,10 +55,12 @@ This project aims to design and implement a relational database system capable o
 * Primary Keys & Foreign Keys
 * One-to-Many Relationships
 * Many-to-Many Relationships
+* Junction Tables
 * Database Normalization
 * Stored Procedures
 * Transaction Management
 * TRY/CATCH Error Handling
+* Aggregation & Reporting Queries
 
 ---
 
@@ -64,6 +69,8 @@ This project aims to design and implement a relational database system capable o
 ## usp_Orders
 
 Creates customer orders and inserts related order items while automatically calculating total order amounts.
+
+---
 
 ## usp_ProcessShipment
 
@@ -77,8 +84,44 @@ Processes customer shipments by:
 
 ---
 
+## usp_StockReceival
+
+Handles inbound inventory operations by:
+
+* validating products and warehouses
+* validating batch information
+* creating new pharmaceutical batches
+* inserting inventory records
+* validating expiry and manufacture dates
+
+---
+
+# Reporting & Analytics
+
+The project includes SQL reporting queries focused on:
+
+* Inventory analysis
+* Low stock monitoring
+* Revenue tracking
+* Customer spending analysis
+* Shipment performance
+* Expiry monitoring
+
+Reports implemented include:
+
+* Inventory Overview Report
+* Low Stock Report
+* Top Selling Products Report
+* Revenue By Month Report
+* Customer Spend Analysis
+* Shipment Performance Report
+* Expiring Inventory Report
+
+---
+
 # ERD
 
+(Add ERD image here)
 
 ---
 
@@ -104,6 +147,8 @@ Processes customer shipments by:
 * Stored procedure development
 * Inventory workflow logic
 * Shipment processing logic
+* Inventory receival workflows
+* BI & reporting queries
 
 ---
 
@@ -112,10 +157,10 @@ Processes customer shipments by:
 * Inventory transaction logging
 * Expiry monitoring workflows
 * Low stock alert procedures
-* Reporting & analytics queries
 * Query optimization
 * Advanced warehouse logic
 * Performance optimization
+* Dashboard development in Power BI or Tableau
 
 ---
 
@@ -127,6 +172,7 @@ The purpose of this project is to strengthen:
 * backend SQL development
 * business logic implementation
 * transactional workflow thinking
+* reporting & BI skills
 * enterprise systems understanding
 
 while simulating realistic pharmaceutical operational workflows using SQL Server.
