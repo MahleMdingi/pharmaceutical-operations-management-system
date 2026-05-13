@@ -121,7 +121,6 @@ Reports implemented include:
 
 # ERD
 
-(Add ERD image here)
 
 ---
 
