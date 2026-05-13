@@ -1,1 +1,129 @@
 
+
+-- ====================================
+-- REPORT 1 - Inventory Overview
+-- Business Question:
+-- What inventory is currently available?
+-- ====================================
+
+SELECT
+    p.ProductName,
+    b.BatchNumber,
+    w.WarehouseName,
+    i.QuantityAvailable,
+    b.ExpiryDate
+FROM Inventory i
+JOIN Batches b
+    ON i.BatchID = b.BatchID
+JOIN Products p
+    ON b.ProductID = p.ProductID
+JOIN Warehouses w
+    ON i.WarehouseID = w.WarehouseID
+ORDER BY p.ProductName;
+
+
+-- ====================================
+-- REPORT 2 - Low Stock Report
+-- Business Question:
+-- Which products are running low on stock?
+-- ====================================
+
+SELECT
+    p.ProductName,
+    w.WarehouseName,
+    i.QuantityAvailable
+FROM Inventory i
+JOIN Batches b
+    ON i.BatchID = b.BatchID
+JOIN Products p
+    ON b.ProductID = p.ProductID
+JOIN Warehouses w
+    ON i.WarehouseID = w.WarehouseID
+WHERE i.QuantityAvailable < 3000
+ORDER BY i.QuantityAvailable ASC;
+
+
+-- ====================================
+-- REPORT 3 - Top Selling Products
+-- Business Question:
+-- Which products generate the most sales?
+-- ====================================
+
+SELECT
+    p.ProductName,
+    SUM(oi.Quantity) AS [Total Quantity Sold],
+    SUM(oi.Quantity * oi.UnitPrice) AS [Total Revenue]
+FROM OrderItems oi
+JOIN Products p
+    ON oi.ProductID = p.ProductID
+GROUP BY p.ProductName
+ORDER BY [Total Revenue] DESC;
+
+
+-- ====================================
+-- REPORT 4 - Revenue By Month
+-- Business Question:
+-- How is revenue trending monthly?
+-- ====================================
+
+SELECT
+    YEAR(o.OrderDate) AS [Year],
+    MONTH(o.OrderDate) AS [Month],
+    SUM(o.TotalAmount) AS [Total Revenue],
+    COUNT(o.OrderID) AS [Order Count]
+FROM Orders o
+GROUP BY
+    YEAR(o.OrderDate),
+    MONTH(o.OrderDate)
+ORDER BY
+    [Year],
+    [Month];
+
+
+-- ====================================
+-- REPORT 5 - Customer Spend Analysis
+-- Business Question:
+-- Which customers spend the most?
+-- ====================================
+
+SELECT
+    c.CustomerName,
+    COUNT(o.OrderID) AS [Total Orders],
+    SUM(o.TotalAmount) AS [Total Spend]
+FROM Customers c
+JOIN Orders o
+    ON c.CustomerID = o.CustomerID
+GROUP BY c.CustomerName
+ORDER BY [Total Spend] DESC;
+
+
+-- ====================================
+-- REPORT 6 - Shipment Performance
+-- Business Question:
+-- What is the shipment status distribution?
+-- ====================================
+
+SELECT
+    s.ShipmentStatus,
+    COUNT(*) AS [Shipment Count]
+FROM Shipments s
+GROUP BY s.ShipmentStatus
+ORDER BY [Shipment Count] DESC;
+
+
+-- ====================================
+-- REPORT 7 - Expiring Inventory Report
+-- Business Question:
+-- Which batches are nearing expiry?
+-- ====================================
+
+SELECT
+    p.ProductName,
+    b.BatchNumber,
+    b.ExpiryDate,
+    DATEDIFF(DAY, GETDATE(), b.ExpiryDate) AS [Days Until Expiry]
+FROM Batches b
+JOIN Products p
+    ON b.ProductID = p.ProductID
+ORDER BY [Days Until Expiry] ASC;
+
