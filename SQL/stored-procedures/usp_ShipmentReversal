@@ -1,0 +1,138 @@
+CREATE PROCEDURE usp_ShipmentReversal
+    @i_ProductID INT,
+    @i_WarehouseID INT,
+    @i_BatchNumber VARCHAR(50),
+    @i_ManufactureDate DATE,
+    @i_ExpiryDate DATE,
+    @i_QuantityReceived INT
+AS
+BEGIN
+
+    BEGIN TRY
+
+        BEGIN TRAN
+
+        DECLARE
+            @l_BatchID INT
+
+        -- ====================================
+        -- Validate Product Exists
+        -- ====================================
+
+        IF NOT EXISTS (
+            SELECT 1
+            FROM Products
+            WHERE ProductID = @i_ProductID
+        )
+        BEGIN
+            RAISERROR('Product does not exist.', 16, 1)
+        END
+
+        -- ====================================
+        -- Validate Warehouse Exists
+        -- ====================================
+
+        IF NOT EXISTS (
+            SELECT 1
+            FROM Warehouses
+            WHERE WarehouseID = @i_WarehouseID
+        )
+        BEGIN
+            RAISERROR('Warehouse does not exist.', 16, 1)
+        END
+
+        -- ====================================
+        -- Validate Batch Number Is Unique
+        -- ====================================
+
+        IF EXISTS (
+            SELECT 1
+            FROM Batches
+            WHERE BatchNumber = @i_BatchNumber
+        )
+        BEGIN
+            RAISERROR('Batch number already exists.', 16, 1)
+        END
+
+        -- ====================================
+        -- Validate Quantity Received
+        -- ====================================
+
+        IF @i_QuantityReceived <= 0
+        BEGIN
+            RAISERROR('Quantity received must be greater than 0.', 16, 1)
+        END
+
+        -- ====================================
+        -- Validate Expiry Date
+        -- ====================================
+
+        IF @i_ExpiryDate <= GETDATE()
+        BEGIN
+            RAISERROR('Expiry date must be greater than today.', 16, 1)
+        END
+
+        -- ====================================
+        -- Validate Manufacture Date
+        -- ====================================
+
+        IF @i_ExpiryDate <= @i_ManufactureDate
+        BEGIN
+            RAISERROR('Manufacture date must be before expiry date.', 16, 1)
+        END
+
+        -- ====================================
+        -- Create New Batch
+        -- ====================================
+
+        INSERT INTO Batches (
+            ProductID,
+            BatchNumber,
+            ManufactureDate,
+            ExpiryDate,
+            QuantityProduced
+        )
+        VALUES (
+            @i_ProductID,
+            @i_BatchNumber,
+            @i_ManufactureDate,
+            @i_ExpiryDate,
+            @i_QuantityReceived
+        )
+
+        -- Retrieve Newly Created BatchID
+        SET @l_BatchID = SCOPE_IDENTITY()
+
+        -- ====================================
+        -- Insert Inventory Record
+        -- ====================================
+
+        INSERT INTO Inventory (
+            BatchID,
+            WarehouseID,
+            QuantityAvailable
+        )
+        VALUES (
+            @l_BatchID,
+            @i_WarehouseID,
+            @i_QuantityReceived
+        )
+
+        COMMIT
+
+    END TRY
+
+    BEGIN CATCH
+
+        ROLLBACK
+
+        DECLARE @l_ErrorMessage VARCHAR(500)
+
+        SET @l_ErrorMessage = ERROR_MESSAGE()
+
+        RAISERROR(@l_ErrorMessage, 16, 1)
+
+    END CATCH
+
+END
+GO
