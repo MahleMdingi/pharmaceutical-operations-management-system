@@ -150,16 +150,18 @@ Reports implemented include:
 * BI & reporting queries
 
 ---
+# Power BI Dashboard
 
-# Future Improvements
+The project includes a Power BI dashboard built using the pharmaceutical operations database.
 
-* Inventory transaction logging
-* Expiry monitoring workflows
-* Low stock alert procedures
-* Query optimization
-* Advanced warehouse logic
-* Performance optimization
-* Dashboard development in Power BI or Tableau
+The dashboard includes:
+- Revenue tracking
+- Order analytics
+- Shipment performance
+- Product sales analysis
+- Inventory KPIs
+
+This phase of the project helped strengthen foundational business intelligence and dashboard development skills using Power BI.
 
 ---
 
